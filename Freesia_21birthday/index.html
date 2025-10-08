@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wdm21岁啦！</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+            color: #5a4a4a;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+        
+        h1 {
+            color: #ff6b6b;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(211, 139, 139, 0.1);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .birthday-person {
+            font-size: clamp(2rem, 4vw, 2.5rem);
+            color: #ff8e8e;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .message {
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            line-height: 1.6;
+            color: #7a5c5c;
+            margin-bottom: 20px;
+            padding: 0 20px;
+            font-weight: 400;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+        
+        @media (min-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: clamp(15px, 3vw, 25px);
+            box-shadow: 0 10px 20px rgba(176, 115, 115, 0.1);
+            transition: transform 0.3s ease;
+            width: 100%;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card h2 {
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            font-size: clamp(1.5rem, 3vw, 1.8rem);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+        }
+        
+        .card h2 i {
+            font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+        }
+        
+        /* 相册样式 */
+        .photo-album-container {
+            position: relative;
+            grid-column: 1 / -1;
+        }
+        
+        .photo-album {
+            position: relative;
+            height: clamp(250px, 40vw, 400px);
+            overflow: hidden;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        .photo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1s ease, transform 0.3s ease;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+        
+        .photo.active {
+            opacity: 1;
+        }
+        
+        .photo.zoomed {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1.2);
+            width: 90vw;
+            height: 90vh;
+            max-width: 1200px;
+            max-height: 800px;
+            z-index: 1000;
+            box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.8);
+            cursor: zoom-out;
+            border-radius: 10px;
+        }
+        
+        .album-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .album-btn {
+            padding: clamp(6px, 1.5vw, 8px) clamp(10px, 2vw, 15px);
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: clamp(0.9rem, 1.8vw, 1rem);
+        }
+        
+        .album-btn:hover {
+            background: #ff5252;
+        }
+        
+        /* 上传区域样式 */
+        .upload-area {
+            border: 2px dashed #ff6b6b;
+            border-radius: 10px;
+            padding: clamp(15px, 3vw, 20px);
+            text-align: center;
+            margin-top: 15px;
+            background: rgba(255, 107, 107, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .upload-area:hover {
+            background: rgba(255, 107, 107, 0.1);
+        }
+        
+        .upload-area i {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            color: #ff6b6b;
+            margin-bottom: 10px;
+        }
+        
+        .upload-text {
+            color: #ff6b6b;
+            font-weight: bold;
+            font-size: clamp(1rem, 2vw, 1.1rem);
+        }
+        
+        .upload-hint {
+            font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+            color: #a87d7d;
+            margin-top: 5px;
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        .uploaded-photos {
+            margin-top: 15px;
+            max-height: 150px;
+            overflow-y: auto;
+            width: 100%;
+        }
+        
+        .uploaded-photo-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            width: 100%;
+        }
+        
+        .uploaded-photo-item:last-child {
+            border-bottom: none;
+        }
+        
+        .photo-name {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #7a5c5c;
+            font-size: clamp(0.9rem, 1.8vw, 1rem);
+        }
+        
+        .delete-photo {
+            color: #ff6b6b;
+            cursor: pointer;
+            padding: 5px;
+            font-size: clamp(0.9rem, 1.8vw, 1rem);
+        }
+        
+        /* 倒计时样式 */
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: clamp(8px, 2vw, 15px);
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .countdown-item {
+            text-align: center;
+            background: #ff6b6b;
+            color: white;
+            padding: clamp(10px, 2vw, 15px);
+            border-radius: 10px;
+            min-width: clamp(60px, 12vw, 80px);
+        }
+        
+        .countdown-number {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: bold;
+        }
+        
+        .countdown-label {
+            font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+            margin-top: 5px;
+        }
+        
+        /* 留言板样式 */
+        .guestbook {
+            grid-column: 1 / -1;
+        }
+        
+        .guestbook-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            width: 100%;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .form-group label {
+            font-weight: bold;
+            color: #ff6b6b;
+            font-size: clamp(1rem, 2vw, 1.1rem);
+        }
+        
+        .form-group input, .form-group textarea {
+            padding: 10px 15px;
+            border: 2px solid #ffd1d1;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            font-weight: 400;
+            width: 100%;
+        }
+        
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #ff6b6b;
+            outline: none;
+        }
+        
+        .submit-btn {
+            padding: 12px 25px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            align-self: flex-start;
+            font-weight: 500;
+        }
+        
+        .submit-btn:hover {
+            background: #ff5252;
+            transform: translateY(-3px);
+        }
+        
+        .guestbook-entries {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            width: 100%;
+        }
+        
+        .entry {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #ff6b6b;
+            position: relative;
+            width: 100%;
+        }
+        
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .entry-author {
+            font-weight: bold;
+            color: #ff6b6b;
+            font-size: clamp(1rem, 2vw, 1.1rem);
+        }
+        
+        .entry-date {
+            color: #888;
+            font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+        }
+        
+        .entry-content {
+            line-height: 1.6;
+            color: #555;
+            padding-right: 30px;
+            font-weight: 400;
+            font-size: 1rem;
+        }
+        
+        .entry-type {
+            display: inline-block;
+            padding: 3px 10px;
+            background: #ffd1d1;
+            color: #ff6b6b;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-right: 10px;
+        }
+        
+        .delete-entry {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: #ff6b6b;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+        
+        .delete-entry:hover {
+            opacity: 1;
+        }
+        
+        /* 装饰元素 */
+        .cake {
+            width: clamp(150px, 30vw, 200px);
+            height: clamp(90px, 18vw, 120px);
+            margin: 20px auto;
+            position: relative;
+        }
+        
+        .cake-base {
+            width: 90%;
+            height: 50%;
+            background: #f8c291;
+            border-radius: 10px;
+            position: absolute;
+            bottom: 0;
+            left: 5%;
+        }
+        
+        .cake-top {
+            width: 80%;
+            height: 42%;
+            background: #ff9ff3;
+            border-radius: 50% 50% 0 0;
+            position: absolute;
+            bottom: 50%;
+            left: 10%;
+        }
+        
+        .candle {
+            width: 5%;
+            height: 33%;
+            background: #ff9ff3;
+            position: absolute;
+            bottom: 92%;
+            left: 47.5%;
+            border-radius: 5px 5px 0 0;
+        }
+        
+        .flame {
+            width: 7.5%;
+            height: 21%;
+            background: #ff9f43;
+            border-radius: 50% 50% 20% 20%;
+            position: absolute;
+            bottom: 125%;
+            left: 46.25%;
+            animation: flicker 0.8s infinite alternate;
+        }
+        
+        @keyframes flicker {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        .balloons {
+            display: flex;
+            justify-content: center;
+            gap: clamp(10px, 2vw, 20px);
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .balloon {
+            width: clamp(30px, 6vw, 50px);
+            height: clamp(36px, 7.2vw, 60px);
+            border-radius: 50%;
+            position: relative;
+            animation: float 5s infinite ease-in-out;
+        }
+        
+        .balloon:before {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 30px;
+            background: #333;
+        }
+        
+        .balloon:nth-child(1) {
+            background: #ff6b6b;
+            animation-delay: 0s;
+        }
+        
+        .balloon:nth-child(2) {
+            background: #48dbfb;
+            animation-delay: 0.5s;
+        }
+        
+        .balloon:nth-child(3) {
+            background: #1dd1a1;
+            animation-delay: 1s;
+        }
+        
+        .balloon:nth-child(4) {
+            background: #feca57;
+            animation-delay: 1.5s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #f00;
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #a87d7d;
+            font-size: 0.9rem;
+            font-weight: 300;
+            width: 100%;
+        }
+        
+        .empty-album {
+            color: #a87d7d;
+            font-style: italic;
+            font-size: clamp(1rem, 2vw, 1.1rem);
+        }
+        
+        /* 卡片内普通文字样式 */
+        .card p {
+            color: #7a5c5c;
+            font-size: clamp(1rem, 2vw, 1.1rem);
+        }
+        
+        /* 相册说明文字 */
+        .photo-album-container p {
+            color: #7a5c5c;
+            font-size: clamp(1rem, 2vw, 1.1rem);
+        }
+        
+        /* 倒计时说明文字 */
+        .countdown-container p {
+            color: #7a5c5c;
+            font-size: clamp(1rem, 2vw, 1.1rem);
+        }
+        
+        /* 留言板说明文字 */
+        .guestbook > p {
+            color: #7a5c5c;
+            font-size: clamp(1rem, 2vw, 1.1rem);
+        }
+        
+        /* 放大图片时的关闭按钮 */
+        .close-zoom {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.5);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1001;
+            border: none;
+        }
+        
+        .close-zoom:hover {
+            background: rgba(0, 0, 0, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>生日快乐！</h1>
+            <div class="birthday-person">亲爱的wdmm</div>
+            <div class="message">首先恭喜你保研成功！又完成了人生一大进步！你超棒的，祝你21岁生日快乐！天天开心，好运常伴~</div>
+            
+            <div class="cake">
+                <div class="cake-base"></div>
+                <div class="cake-top"></div>
+                <div class="candle"></div>
+                <div class="flame"></div>
+            </div>
+            
+            <div class="balloons">
+                <div class="balloon"></div>
+                <div class="balloon"></div>
+                <div class="balloon"></div>
+                <div class="balloon"></div>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <!-- 相册 -->
+            <div class="card photo-album-container">
+                <h2><i class="fas fa-images"></i> 生日相册</h2>
+                <p>上传美好回忆，制作专属相册</p>
+                <div class="photo-album" id="photoAlbum">
+                    <img src="images/微信图片_20251008211419_49_195.jpg" class="photo active" alt="PHOTO1">
+                    <img src="images/微信图片_20251008212014_55_195.jpg" class="photo" alt="PHOTO2">
+                    <img src="images/微信图片_20251008211457_51_195.jpg" class="photo" alt="PHOTO3">
+                    <img src="images/微信图片_20251008211551_52_195.jpg" class="photo" alt="PHOTO4">
+                    <img src="images/微信图片_20251008211431_50_195.jpg" class="photo" alt="PHOTO5">
+                    <img src="images/微信图片_20251008211552_53_195.jpg" class="photo" alt="PHOTO6">
+                    <img src="images/微信图片_20251008212016_57_195.jpg" class="photo" alt="PHOTO7">
+                </div>
+                
+                <div class="album-controls">
+                    <button class="album-btn" id="prevPhoto"><i class="fas fa-arrow-left"></i> 上一张</button>
+                    <button class="album-btn" id="nextPhoto">下一张 <i class="fas fa-arrow-right"></i></button>
+                    <button class="album-btn" id="deleteCurrentPhoto"><i class="fas fa-trash"></i> 删除当前照片</button>
+                    <button class="album-btn" id="zoomPhoto"><i class="fas fa-search-plus"></i> 放大查看</button>
+                </div>
+                
+                <!-- 上传区域 -->
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <div class="upload-text">点击上传照片</div>
+                    <div class="upload-hint">支持 JPG, PNG 格式</div>
+                    <input type="file" id="fileInput" accept="image/*" multiple>
+                </div>
+                
+                <div class="uploaded-photos" id="uploadedPhotos">
+                    <!-- 上传的照片列表 -->
+                </div>
+
+                <!-- 在相册部分使用固定图片 -->
+                
+            </div>
+            
+            <!-- 倒计时 -->
+            <div class="card countdown-container">
+                <h2><i class="fas fa-clock"></i> 生日倒计时</h2>
+                <p>距离下一次生日还有：</p>
+                <div class="countdown">
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="days">0</div>
+                        <div class="countdown-label">天</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="hours">0</div>
+                        <div class="countdown-label">小时</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="minutes">0</div>
+                        <div class="countdown-label">分钟</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-number" id="seconds">0</div>
+                        <div class="countdown-label">秒</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 留言板 -->
+            <div class="card guestbook">
+                <h2><i class="fas fa-book"></i> 生日留言板</h2>
+                <p>wdm的生日感想＆对wdm的祝福，它们将会被永久保存~</p>
+                
+                <form class="guestbook-form" id="guestbookForm">
+                    <div class="form-group">
+                        <label for="author">from：</label>
+                        <input type="text" id="author" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">说些什么吧~</label>
+                        <textarea id="message" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>留言类型：</label>
+                        <div>
+                            <input type="radio" id="type-blessing" name="type" value="blessing" checked>
+                            <label for="type-blessing">祝福</label>
+                            
+                            <input type="radio" id="type-memory" name="type" value="memory">
+                            <label for="type-memory">生日感想</label>
+                            
+                            <input type="radio" id="type-other" name="type" value="other">
+                            <label for="type-other">其他</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="submit-btn">留言</button>
+                </form>
+                
+                <div class="guestbook-entries" id="guestbookEntries">
+                    <!-- 留言将动态添加到这里 -->
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>给wdm的生日祝福&copy; <span id="currentYear"></span>from：mxj 2025/10/9</p>
+        </footer>
+    </div>
+
+    <script>
+        // 设置当前年份
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        // 相册功能
+        let currentPhotoIndex = 0;
+        let uploadedPhotos = [];
+        let isZoomed = false;
+        
+        // 上传功能
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const photoAlbum = document.getElementById('photoAlbum');
+        const uploadedPhotosList = document.getElementById('uploadedPhotos');
+        const deleteCurrentPhotoBtn = document.getElementById('deleteCurrentPhoto');
+        const zoomPhotoBtn = document.getElementById('zoomPhoto');
+        
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            const files = e.target.files;
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = (e) => {
+                        const photoData = {
+                            id: Date.now() + i,
+                            name: file.name,
+                            dataUrl: e.target.result
+                        };
+                        
+                        uploadedPhotos.push(photoData);
+                        updatePhotoAlbum();
+                        updateUploadedPhotosList();
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
+            }
+            
+            // 重置文件输入，允许重复选择相同文件
+            fileInput.value = '';
+        });
+        
+        function updatePhotoAlbum() {
+            photoAlbum.innerHTML = '';
+            
+            if (uploadedPhotos.length === 0) {
+                photoAlbum.innerHTML = '<div class="empty-album">暂无照片，请上传照片</div>';
+                return;
+            }
+            
+            uploadedPhotos.forEach((photo, index) => {
+                const img = document.createElement('img');
+                img.className = 'photo';
+                img.src = photo.dataUrl;
+                img.alt = photo.name;
+                img.dataset.index = index;
+                
+                if (index === currentPhotoIndex) {
+                    img.classList.add('active');
+                }
+                
+                // 点击图片放大/缩小
+                img.addEventListener('click', toggleZoom);
+                
+                photoAlbum.appendChild(img);
+            });
+        }
+        
+        function updateUploadedPhotosList() {
+            uploadedPhotosList.innerHTML = '';
+            
+            uploadedPhotos.forEach((photo, index) => {
+                const item = document.createElement('div');
+                item.className = 'uploaded-photo-item';
+                item.innerHTML = `
+                    <span class="photo-name">${photo.name}</span>
+                    <span class="delete-photo" data-index="${index}">
+                        <i class="fas fa-times"></i>
+                    </span>
+                `;
+                
+                uploadedPhotosList.appendChild(item);
+            });
+            
+            // 添加删除事件
+            document.querySelectorAll('.delete-photo').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(e.currentTarget.getAttribute('data-index'));
+                    deletePhoto(index);
+                });
+            });
+        }
+        
+        // 删除照片
+        function deletePhoto(index) {
+            if (uploadedPhotos.length === 0) return;
+            
+            uploadedPhotos.splice(index, 1);
+            
+            // 如果删除的是当前显示的照片，显示前一张或重置
+            if (index === currentPhotoIndex) {
+                if (uploadedPhotos.length > 0) {
+                    currentPhotoIndex = Math.max(0, currentPhotoIndex - 1);
+                } else {
+                    currentPhotoIndex = 0;
+                }
+            } else if (index < currentPhotoIndex) {
+                currentPhotoIndex--;
+            }
+            
+            updatePhotoAlbum();
+            updateUploadedPhotosList();
+            savePhotosToLocalStorage();
+        }
+        
+        // 删除当前照片
+        deleteCurrentPhotoBtn.addEventListener('click', () => {
+            if (uploadedPhotos.length === 0) return;
+            deletePhoto(currentPhotoIndex);
+        });
+        
+        // 相册控制
+        document.getElementById('nextPhoto').addEventListener('click', () => {
+            if (uploadedPhotos.length === 0) return;
+            
+            const photos = document.querySelectorAll('.photo');
+            photos[currentPhotoIndex].classList.remove('active');
+            currentPhotoIndex = (currentPhotoIndex + 1) % uploadedPhotos.length;
+            photos[currentPhotoIndex].classList.add('active');
+        });
+        
+        document.getElementById('prevPhoto').addEventListener('click', () => {
+            if (uploadedPhotos.length === 0) return;
+            
+            const photos = document.querySelectorAll('.photo');
+            photos[currentPhotoIndex].classList.remove('active');
+            currentPhotoIndex = (currentPhotoIndex - 1 + uploadedPhotos.length) % uploadedPhotos.length;
+            photos[currentPhotoIndex].classList.add('active');
+        });
+        
+        // 放大/缩小照片
+        function toggleZoom() {
+            if (uploadedPhotos.length === 0) return;
+            
+            const photos = document.querySelectorAll('.photo');
+            const currentPhoto = photos[currentPhotoIndex];
+            
+            if (!isZoomed) {
+                // 放大
+                currentPhoto.classList.add('zoomed');
+                isZoomed = true;
+                
+                // 添加关闭按钮
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'close-zoom';
+                closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                closeBtn.addEventListener('click', toggleZoom);
+                document.body.appendChild(closeBtn);
+            } else {
+                // 缩小
+                currentPhoto.classList.remove('zoomed');
+                isZoomed = false;
+                
+                // 移除关闭按钮
+                const closeBtn = document.querySelector('.close-zoom');
+                if (closeBtn) {
+                    closeBtn.remove();
+                }
+            }
+        }
+        
+        // 点击放大按钮
+        zoomPhotoBtn.addEventListener('click', toggleZoom);
+        
+        // 自动播放相册
+        setInterval(() => {
+            if (uploadedPhotos.length > 1 && !isZoomed) {
+                const photos = document.querySelectorAll('.photo');
+                if (photos.length > 0) {
+                    photos[currentPhotoIndex].classList.remove('active');
+                    currentPhotoIndex = (currentPhotoIndex + 1) % uploadedPhotos.length;
+                    photos[currentPhotoIndex].classList.add('active');
+                }
+            }
+        }, 5000);
+        
+        // 保存照片到本地存储
+        function savePhotosToLocalStorage() {
+            localStorage.setItem('birthdayPhotos', JSON.stringify(uploadedPhotos));
+        }
+        
+        // 从本地存储加载照片
+        function loadPhotosFromLocalStorage() {
+            const savedPhotos = localStorage.getItem('birthdayPhotos');
+            if (savedPhotos) {
+                uploadedPhotos = JSON.parse(savedPhotos);
+                updatePhotoAlbum();
+                updateUploadedPhotosList();
+            }
+        }
+        
+        // 生日倒计时功能
+        function updateCountdown() {
+            // 设置下一个生日日期 
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            let nextBirthday = new Date(currentYear, 9, 9); // 月份从0开始，9表示10月
+            
+            // 如果今年生日已过，计算下一年的生日
+            if (now > nextBirthday) {
+                nextBirthday.setFullYear(currentYear + 1);
+            }
+            
+            const diff = nextBirthday - now;
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = minutes;
+            document.getElementById('seconds').textContent = seconds;
+        }
+        
+        // 初始化倒计时并每秒更新
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+        
+        // 留言板功能
+        const guestbookForm = document.getElementById('guestbookForm');
+        const guestbookEntries = document.getElementById('guestbookEntries');
+        
+        // 从本地存储加载留言
+        function loadEntries() {
+            const entries = JSON.parse(localStorage.getItem('birthdayGuestbook')) || [];
+            guestbookEntries.innerHTML = '';
+            
+            entries.forEach((entry, index) => {
+                addEntryToDOM(entry, index);
+            });
+        }
+        
+        // 添加留言到DOM
+        function addEntryToDOM(entry, index) {
+            const entryEl = document.createElement('div');
+            entryEl.className = 'entry';
+            
+            const typeText = {
+                'blessing': '祝福',
+                'memory': '生日感想',
+                'other': '其他'
+            };
+            
+            entryEl.innerHTML = `
+                <div class="entry-header">
+                    <div>
+                        <span class="entry-type">${typeText[entry.type]}</span>
+                        <span class="entry-author">${entry.author}</span>
+                    </div>
+                    <div class="entry-date">${entry.date}</div>
+                </div>
+                <div class="entry-content">${entry.message}</div>
+                <div class="delete-entry" data-index="${index}">
+                    <i class="fas fa-trash-alt"></i>
+                </div>
+            `;
+            
+            guestbookEntries.prepend(entryEl);
+            
+            // 添加删除事件
+            const deleteBtn = entryEl.querySelector('.delete-entry');
+            deleteBtn.addEventListener('click', (e) => {
+                if (confirm('确定要删除这条留言吗？')) {
+                    deleteEntry(index);
+                }
+            });
+        }
+        
+        // 删除留言
+        function deleteEntry(index) {
+            const entries = JSON.parse(localStorage.getItem('birthdayGuestbook')) || [];
+            entries.splice(index, 1);
+            localStorage.setItem('birthdayGuestbook', JSON.stringify(entries));
+            loadEntries();
+        }
+        
+        // 处理表单提交
+        guestbookForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const author = document.getElementById('author').value;
+            const message = document.getElementById('message').value;
+            const type = document.querySelector('input[name="type"]:checked').value;
+            const date = new Date().toLocaleString('zh-CN');
+            
+            const entry = {
+                author,
+                message,
+                type,
+                date
+            };
+            
+            // 保存到本地存储
+            const entries = JSON.parse(localStorage.getItem('birthdayGuestbook')) || [];
+            entries.push(entry);
+            localStorage.setItem('birthdayGuestbook', JSON.stringify(entries));
+            
+            // 添加到DOM
+            loadEntries();
+            
+            // 重置表单
+            guestbookForm.reset();
+            
+            // 显示成功消息
+            alert('留言提交成功！');
+        });
+        
+        // 初始化加载留言和照片
+        loadEntries();
+        loadPhotosFromLocalStorage();
+        
+        // 五彩纸屑效果
+        function createConfetti() {
+            const colors = ['#ff6b6b', '#48dbfb', '#1dd1a1', '#feca57', '#ff9ff3'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                const animation = confetti.style.animation = `confettiFall ${Math.random() * 3 + 2}s linear forwards`;
+                document.body.appendChild(confetti);
+                
+                // 添加动画
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes confettiFall {
+                        0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+                        100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                // 移除纸屑元素
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+        
+        // 页面加载时显示一些示例留言（如果没有留言）
+        window.addEventListener('load', () => {
+            const entries = JSON.parse(localStorage.getItem('birthdayGuestbook')) || [];
+            if (entries.length === 0) {
+                const sampleEntries = [
+                    {
+                        author: "我是生日小助手",
+                        message: "在这里记录下每一年的生日感想吧！",
+                        type: "other",
+                        date: new Date().toLocaleString('zh-CN')
+                    }
+                ];
+                localStorage.setItem('birthdayGuestbook', JSON.stringify(sampleEntries));
+                loadEntries();
+            }
+        });
+    </script>
+</body>
+</html>
